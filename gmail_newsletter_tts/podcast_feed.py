@@ -26,7 +26,8 @@ def _itunes(tag: str) -> str:
 
 class PodcastFeed:
     def __init__(self):
-        self._feed_path = Path(config.PODCAST_FEED_PATH)
+        repo_root = Path(__file__).resolve().parent.parent
+        self._feed_path = repo_root / config.PODCAST_FEED_PATH
         self._feed_path.parent.mkdir(parents=True, exist_ok=True)
         self._episodes: list[dict] = []
         self._load_existing()
@@ -133,4 +134,10 @@ class PodcastFeed:
             cwd=repo_root,
             check=True,
         )
-        subprocess.run(["git", "push", "-u", "origin", "HEAD:main"], cwd=repo_root, check=True)
+        token = subprocess.run(
+            ["security", "find-generic-password", "-a", "GITHUB_TOKEN", "-s", "gmail_newsletter_tts", "-w"],
+            capture_output=True, text=True, check=True
+        ).stdout.strip()
+        repo = config.GITHUB_REPO
+        remote_url = f"https://{token}@github.com/{repo}.git"
+        subprocess.run(["git", "push", "-u", remote_url, "HEAD:master"], cwd=repo_root, check=True)

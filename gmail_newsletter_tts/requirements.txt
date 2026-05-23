@@ -2,8 +2,9 @@ google-auth==2.29.0
 google-auth-oauthlib==1.2.0
 google-auth-httplib2==0.2.0
 google-api-python-client==2.127.0
-google-cloud-texttospeech==2.16.3
 beautifulsoup4==4.12.3
 lxml==5.2.1
 PyGithub==2.3.0
 python-dotenv==1.0.1
+edge-tts==6.1.12
+mutagen==1.47.0

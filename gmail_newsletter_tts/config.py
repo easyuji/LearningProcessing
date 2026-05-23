@@ -8,9 +8,7 @@ TOKEN_PATH = os.getenv("TOKEN_PATH", "token.json")
 NEWSLETTER_LABEL = os.getenv("NEWSLETTER_LABEL", "newsletter")
 PROCESSED_LABEL = os.getenv("PROCESSED_LABEL", "newsletter-tts-done")
 
-TTS_VOICE = os.getenv("TTS_VOICE", "ja-JP-Neural2-B")
-TTS_LANGUAGE = os.getenv("TTS_LANGUAGE", "ja-JP")
-TTS_MONTHLY_CHAR_LIMIT = int(os.getenv("TTS_MONTHLY_CHAR_LIMIT", "900000"))
+TTS_VOICE = os.getenv("TTS_VOICE", "ja-JP-NanamiNeural")
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
 GITHUB_REPO = os.getenv("GITHUB_REPO", "")

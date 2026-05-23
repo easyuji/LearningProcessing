@@ -75,7 +75,7 @@ class PodcastFeed:
 
     def _write_xml(self):
         ET.register_namespace("itunes", _ITUNES_NS)
-        root = ET.Element("rss", {"version": "2.0", "xmlns:itunes": _ITUNES_NS})
+        root = ET.Element("rss", {"version": "2.0"})
         channel = ET.SubElement(root, "channel")
 
         def ch(tag: str, text: str):

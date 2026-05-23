@@ -10,16 +10,16 @@ class GitHubClient:
         self._release = self._get_or_create_release()
 
     def _get_or_create_release(self):
-        try:
-            return self._repo.get_release(config.GITHUB_RELEASE_TAG)
-        except GithubException:
-            return self._repo.create_git_release(
-                tag=config.GITHUB_RELEASE_TAG,
-                name="Podcast MP3 Files",
-                message="Auto-generated MP3s from Gmail newsletters",
-                draft=False,
-                prerelease=False,
-            )
+        for release in self._repo.get_releases():
+            if release.tag_name == config.GITHUB_RELEASE_TAG:
+                return release
+        return self._repo.create_git_release(
+            tag=config.GITHUB_RELEASE_TAG,
+            name="Podcast MP3 Files",
+            message="Auto-generated MP3s from Gmail newsletters",
+            draft=False,
+            prerelease=False,
+        )
 
     def upload_mp3(self, file_path: str, filename: str) -> str:
         for asset in self._release.get_assets():

@@ -1,105 +1,100 @@
-import base64
-import os
-
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
+import email
+import imaplib
+import re
+from email.header import decode_header as _decode_raw
 
 import config
 
-_SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
 
-
-def _build_service():
-    creds = None
-    if os.path.exists(config.TOKEN_PATH):
-        creds = Credentials.from_authorized_user_file(config.TOKEN_PATH, _SCOPES)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
+def _decode_header(value: str) -> str:
+    parts = _decode_raw(value or "")
+    decoded = ""
+    for part, charset in parts:
+        if isinstance(part, bytes):
+            decoded += part.decode(charset or "utf-8", errors="replace")
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(config.CREDENTIALS_PATH, _SCOPES)
-            creds = flow.run_local_server(port=0)
-        with open(config.TOKEN_PATH, "w") as f:
-            f.write(creds.to_json())
-    return build("gmail", "v1", credentials=creds)
+            decoded += part
+    return decoded
 
 
-def _collect_parts(payload, html_parts, text_parts):
-    mime = payload.get("mimeType", "")
-    body_data = payload.get("body", {}).get("data")
-    if body_data:
-        decoded = base64.urlsafe_b64decode(body_data).decode("utf-8", errors="replace")
-        if mime == "text/html":
-            html_parts.append(decoded)
-        elif mime == "text/plain":
-            text_parts.append(decoded)
-    for part in payload.get("parts", []):
-        _collect_parts(part, html_parts, text_parts)
-
-
-def _parse_message(msg):
-    headers = {h["name"]: h["value"] for h in msg["payload"]["headers"]}
-    html_parts, text_parts = [], []
-    _collect_parts(msg["payload"], html_parts, text_parts)
-    return {
-        "id": msg["id"],
-        "subject": headers.get("Subject", "(no subject)"),
-        "date": headers.get("Date", ""),
-        "html": "\n".join(html_parts),
-        "text": "\n".join(text_parts),
-    }
+def _collect_parts(msg, html_parts: list, text_parts: list):
+    for part in msg.walk():
+        ctype = part.get_content_type()
+        payload = part.get_payload(decode=True)
+        if not payload:
+            continue
+        charset = part.get_content_charset() or "utf-8"
+        text = payload.decode(charset, errors="replace")
+        if ctype == "text/html":
+            html_parts.append(text)
+        elif ctype == "text/plain":
+            text_parts.append(text)
 
 
 class GmailClient:
     def __init__(self):
-        self._service = _build_service()
-        self._label_cache: dict[str, str] = {}
-        self._refresh_label_cache()
-        self._ensure_processed_label()
-
-    def _refresh_label_cache(self):
-        labels = self._service.users().labels().list(userId="me").execute().get("labels", [])
-        self._label_cache = {l["name"]: l["id"] for l in labels}
-
-    def _ensure_processed_label(self):
-        if config.PROCESSED_LABEL not in self._label_cache:
-            created = self._service.users().labels().create(
-                userId="me",
-                body={
-                    "name": config.PROCESSED_LABEL,
-                    "labelListVisibility": "labelHide",
-                    "messageListVisibility": "hide",
-                },
-            ).execute()
-            self._label_cache[config.PROCESSED_LABEL] = created["id"]
-
-    def _label_id(self, name: str) -> str:
-        if name not in self._label_cache:
-            self._refresh_label_cache()
-        if name not in self._label_cache:
-            raise ValueError(f"Gmail label not found: '{name}'. Please create it in Gmail first.")
-        return self._label_cache[name]
+        self._imap = imaplib.IMAP4_SSL("imap.gmail.com")
+        self._imap.login(config.GMAIL_ADDRESS, config.GMAIL_APP_PASSWORD)
+        self._uid_map: dict[str, bytes] = {}  # msg_id -> imap uid
 
     def fetch_unprocessed(self) -> list[dict]:
-        newsletter_id = self._label_id(config.NEWSLETTER_LABEL)
-        results = self._service.users().messages().list(
-            userId="me",
-            labelIds=[newsletter_id],
-            q=f"-label:{config.PROCESSED_LABEL}",
-        ).execute()
+        self._imap.select(f'"{config.NEWSLETTER_LABEL}"')
+        _, data = self._imap.uid("SEARCH", None, "ALL")
+        uids = data[0].split() if data[0] else []
+
         emails = []
-        for ref in results.get("messages", []):
-            msg = self._service.users().messages().get(
-                userId="me", id=ref["id"], format="full"
-            ).execute()
-            emails.append(_parse_message(msg))
+        for uid in uids:
+            _, label_data = self._imap.uid("FETCH", uid, "(X-GM-LABELS X-GM-MSGID)")
+            if not label_data or not label_data[0]:
+                continue
+            raw = label_data[0].decode("utf-8", errors="replace")
+
+            if config.PROCESSED_LABEL in raw:
+                continue
+
+            msgid_match = re.search(r"X-GM-MSGID (\d+)", raw)
+            msg_id = msgid_match.group(1) if msgid_match else uid.decode()
+
+            _, msg_data = self._imap.uid("FETCH", uid, "(RFC822)")
+            if not msg_data or not msg_data[0]:
+                continue
+            raw_email = msg_data[0][1]
+            msg = email.message_from_bytes(raw_email)
+
+            subject = _decode_header(msg.get("Subject", "(no subject)"))
+            date = msg.get("Date", "")
+
+            html_parts, text_parts = [], []
+            _collect_parts(msg, html_parts, text_parts)
+
+            self._uid_map[msg_id] = uid
+            emails.append({
+                "id": msg_id,
+                "subject": subject,
+                "date": date,
+                "html": "\n".join(html_parts),
+                "text": "\n".join(text_parts),
+            })
+
         return emails
 
+    def _ensure_connected(self):
+        try:
+            self._imap.noop()
+        except Exception:
+            self._imap = imaplib.IMAP4_SSL("imap.gmail.com")
+            self._imap.login(config.GMAIL_ADDRESS, config.GMAIL_APP_PASSWORD)
+        self._imap.select(f'"{config.NEWSLETTER_LABEL}"')
+
     def mark_processed(self, message_id: str):
-        self._service.users().messages().modify(
-            userId="me",
-            id=message_id,
-            body={"addLabelIds": [self._label_id(config.PROCESSED_LABEL)]},
-        ).execute()
+        uid = self._uid_map.get(message_id)
+        if uid is None:
+            return
+        self._ensure_connected()
+        self._imap.uid("STORE", uid, "+X-GM-LABELS", f'("{config.PROCESSED_LABEL}")')
+
+    def __del__(self):
+        try:
+            self._imap.logout()
+        except Exception:
+            pass

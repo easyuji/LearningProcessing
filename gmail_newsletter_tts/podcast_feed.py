@@ -133,4 +133,4 @@ class PodcastFeed:
             cwd=repo_root,
             check=True,
         )
-        subprocess.run(["git", "push", "-u", "origin", "HEAD"], cwd=repo_root, check=True)
+        subprocess.run(["git", "push", "-u", "origin", "HEAD:main"], cwd=repo_root, check=True)

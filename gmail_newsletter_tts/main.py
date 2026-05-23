@@ -19,10 +19,23 @@ def _slugify(text: str) -> str:
 
 
 def _check_env():
-    missing = [k for k in ("GITHUB_TOKEN", "GITHUB_REPO") if not os.getenv(k)]
+    missing = []
+    if not config.GITHUB_TOKEN:
+        missing.append("GITHUB_TOKEN")
+    if not config.GITHUB_REPO:
+        missing.append("GITHUB_REPO")
+    if not config.GMAIL_APP_PASSWORD:
+        missing.append("GMAIL_APP_PASSWORD")
     if missing:
-        print(f"ERROR: Missing required env vars: {', '.join(missing)}")
+        print(f"ERROR: Missing required config: {', '.join(missing)}")
         sys.exit(1)
+
+
+def _mark_safe(gmail: GmailClient, message_id: str):
+    try:
+        gmail.mark_processed(message_id)
+    except Exception as e:
+        print(f"  Warning: mark_processed failed: {e}")
 
 
 def main():
@@ -53,13 +66,13 @@ def main():
 
         if feed.has_episode(email["id"]):
             print("  Already in feed, skipping.")
-            gmail.mark_processed(email["id"])
+            _mark_safe(gmail, email["id"])
             continue
 
         text = extract_text(email["html"], email["text"])
         if len(text) < 50:
             print(f"  Text too short ({len(text)} chars), skipping.")
-            gmail.mark_processed(email["id"])
+            _mark_safe(gmail, email["id"])
             continue
 
         print(f"  Text: {len(text)} chars")
@@ -70,7 +83,7 @@ def main():
         with tempfile.TemporaryDirectory() as tmpdir:
             mp3_path = os.path.join(tmpdir, filename)
 
-            print("  Generating MP3 via Google Cloud TTS...")
+            print("  Generating MP3 via Edge TTS...")
             try:
                 duration = text_to_mp3(text, mp3_path)
             except Exception as e:
@@ -92,7 +105,7 @@ def main():
             pub_date=email["date"],
             description=text[:300],
         )
-        gmail.mark_processed(email["id"])
+        _mark_safe(gmail, email["id"])
         feed_updated = True
         print(f"  Done: {mp3_url}")
 

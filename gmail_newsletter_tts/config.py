@@ -21,7 +21,11 @@ GMAIL_APP_PASSWORD = os.getenv("GMAIL_APP_PASSWORD") or _keychain("GMAIL_APP_PAS
 NEWSLETTER_LABEL = os.getenv("NEWSLETTER_LABEL", "newsletter")
 PROCESSED_LABEL = os.getenv("PROCESSED_LABEL", "newsletter-tts-done")
 
-TTS_VOICE = os.getenv("TTS_VOICE", "ja-JP-NanamiNeural")
+TTS_VOICE_EDGE = os.getenv("TTS_VOICE_EDGE", "ja-JP-NanamiNeural")
+TTS_VOICE_OPENAI = os.getenv("TTS_VOICE_OPENAI", "nova")  # nova/shimmer/alloy/echo/onyx/fable
+
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY") or _keychain("ANTHROPIC_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or _keychain("OPENAI_API_KEY")
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN") or _keychain("GITHUB_TOKEN")
 GITHUB_REPO = os.getenv("GITHUB_REPO", "easyuji/LearningProcessing")

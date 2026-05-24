@@ -23,6 +23,7 @@ PROCESSED_LABEL = os.getenv("PROCESSED_LABEL", "newsletter-tts-done")
 
 TTS_VOICE_EDGE = os.getenv("TTS_VOICE_EDGE", "ja-JP-NanamiNeural")
 TTS_VOICE_OPENAI = os.getenv("TTS_VOICE_OPENAI", "nova")  # nova/shimmer/alloy/echo/onyx/fable
+TTS_TARGET_MINUTES = int(os.getenv("TTS_TARGET_MINUTES", "10"))  # 目標再生時間（分）
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY") or _keychain("ANTHROPIC_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or _keychain("OPENAI_API_KEY")

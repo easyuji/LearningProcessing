@@ -5,6 +5,7 @@ import tempfile
 from datetime import datetime
 
 import config
+from cleanup import cleanup_old_audio
 from gmail_client import GmailClient
 from github_client import GitHubClient
 from podcast_feed import PodcastFeed
@@ -128,6 +129,10 @@ def main():
         print(f"Feed saved to {config.PODCAST_FEED_PATH} and pushed.")
     else:
         print("\nNo new episodes added.")
+
+    # 3ヶ月超の音声ファイルを自動削除
+    print("\nCleaning up old audio files...")
+    cleanup_old_audio(keep_days=90)
 
 
 if __name__ == "__main__":

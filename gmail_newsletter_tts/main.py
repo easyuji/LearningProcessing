@@ -7,6 +7,7 @@ from datetime import datetime
 import config
 from gmail_client import GmailClient
 from github_client import GitHubClient
+from notifier import send_notification
 from podcast_feed import PodcastFeed
 from text_extractor import extract_text
 from tts_client import text_to_mp3
@@ -59,6 +60,7 @@ def main():
 
     print(f"Found {len(emails)} newsletter(s) to process.")
     feed_updated = False
+    completed_episodes = []
 
     for email in emails:
         subject = email["subject"]
@@ -107,12 +109,19 @@ def main():
         )
         _mark_safe(gmail, email["id"])
         feed_updated = True
+        completed_episodes.append({
+            "title": subject,
+            "mp3_url": mp3_url,
+            "duration": int(duration),
+        })
         print(f"  Done: {mp3_url}")
 
     if feed_updated:
         print("\nPushing updated podcast feed...")
         feed.save_and_push()
         print(f"Feed saved to {config.PODCAST_FEED_PATH} and pushed.")
+        print("\nSending notification email...")
+        send_notification(completed_episodes)
     else:
         print("\nNo new episodes added.")
 

@@ -23,6 +23,8 @@ PROCESSED_LABEL = os.getenv("PROCESSED_LABEL", "newsletter-tts-done")
 
 TTS_VOICE = os.getenv("TTS_VOICE", "ja-JP-NanamiNeural")
 
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN") or _keychain("GITHUB_TOKEN")
 GITHUB_REPO = os.getenv("GITHUB_REPO", "easyuji/LearningProcessing")
 GITHUB_RELEASE_TAG = os.getenv("GITHUB_RELEASE_TAG", "podcast-mp3s")

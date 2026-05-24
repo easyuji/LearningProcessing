@@ -8,6 +8,7 @@ import config
 from gmail_client import GmailClient
 from github_client import GitHubClient
 from podcast_feed import PodcastFeed
+from script_converter import convert_to_speech_script
 from text_extractor import extract_text
 from tts_client import text_to_mp3
 
@@ -77,6 +78,18 @@ def main():
 
         print(f"  Text: {len(text)} chars")
 
+        # Claude APIで読み上げ用スクリプトに変換（APIキー未設定時はスキップ）
+        if config.ANTHROPIC_API_KEY:
+            print("  Converting to speech script via Claude...")
+            try:
+                script = convert_to_speech_script(text, subject)
+                print(f"  Script: {len(script)} chars")
+            except Exception as e:
+                print(f"  Script conversion failed, using raw text: {e}")
+                script = text
+        else:
+            script = text
+
         date_prefix = datetime.now().strftime("%Y%m%d")
         filename = f"{date_prefix}_{_slugify(subject)}.mp3"
 
@@ -85,7 +98,7 @@ def main():
 
             print("  Generating MP3 via Edge TTS...")
             try:
-                duration = text_to_mp3(text, mp3_path)
+                duration = text_to_mp3(script, mp3_path)
             except Exception as e:
                 print(f"  TTS failed: {e}")
                 continue

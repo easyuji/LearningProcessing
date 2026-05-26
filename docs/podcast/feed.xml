@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+  <channel>
+    <title>My Newsletter Podcast</title>
+    <description>Gmailのメルマガを音声で聴く</description>
+    <language>ja</language>
+    <link>https://easyuji.github.io/LearningProcessing</link>
+    <itunes:author>Yuji</itunes:author>
+    <itunes:explicit>no</itunes:explicit>
+    <itunes:image href="https://easyuji.github.io/LearningProcessing/podcast/cover.jpg" />
+    <item>
+      <title>週刊Life is beautiful ２０２６年５月２６日号：オムレツの焼き方と文化、DSLを使ったAIネイティブなエンタープライズ・アプリ、SpaceXのIPO</title>
+      <description>今週のざっくばらん
+オムレツの焼き方と文化
+以前から、日本のオムレツと米国のオムレツには大きな違いがあると感じていましたが、今回、ヨーロッパでオムレツを食べた結果、オムレツが日本で独自の進化を遂げたことが明確になりました。
+日本を代表するオムレツといえば、中が半熟なのにも関わらず、表面は滑らかに焼き上げられた美しいオムレツです。下の写真は、去年、箱根の強羅花壇に泊まった時に朝食に出たオムレツですが、その美しさと美味しさには感動してしまいました。
+それと比べると米国のオムレツは、別の食べ物と言って良いぐらい異なります。ハムや野菜などの具が入っているのが一般的だし、火はしっかりと通っています。チー</description>
+      <pubDate>Tue, 26 May 2026 07:10:00 +0900</pubDate>
+      <guid>1866200646023597637</guid>
+      <itunes:duration>5265</itunes:duration>
+      <itunes:image href="https://easyuji.github.io/LearningProcessing/podcast/images/ep_20260526.jpg" />
+      <enclosure url="https://github.com/easyuji/LearningProcessing/releases/download/podcast-mp3s/20260526_.life-is-beautiful-.dsl.a.mp3" type="audio/mpeg" length="31593600" />
+    </item>
+    <item>
+      <title>生成AIが21世紀の核兵器となる理由 〜見えない…</title>
+      <description>サイトで確認する
+生成AIが21世紀の核兵器となる理由 〜見えない核兵器、それがAI〜
+AIはただの便利なチャットボットではない
+最近、ゆな先生のXのタイムラインを眺めていると、Claude Codeのプログラミング能力が人間を遥かに超えたとか、ChatGPTの画像モデルがGeminiを超えてきて驚いたといった話題が沢山目につく。
+Claude Codeで月収100万を達成した〜とか、そういう金儲け的な記事とかLINE誘導なども多く見る。
+誰もが生成AIを、日々の業務を効率化してくれる魔法の杖か、ちょっとした暇つぶしの話し相手として消費している。
+確かに消費者としてAIの進化を楽しみ、活用する</description>
+      <pubDate>Sun, 24 May 2026 06:51:53 +0000</pubDate>
+      <guid>1866051632761674094</guid>
+      <itunes:duration>2969</itunes:duration>
+      <enclosure url="https://github.com/easyuji/LearningProcessing/releases/download/podcast-mp3s/20260525_.ai.21.-.mp3" type="audio/mpeg" length="17811648" />
+    </item>
+    <item>
+      <title>週刊Life is beautiful ２０２６年５月１２日号：会計ソフトを２〜３日で作った話、AIが米国の労働者から吸い上げた$211billion（約32兆円）</title>
+      <description>今週のざっくばらん
+会計ソフトを２〜３日で作った話
+最近は、MulmoClaudeの開発ばかりしている私ですが、先週、ふと思いついて、会計ソフトの機能をMulmoClaudeに組み込んでみたところ、わずか２〜３日であっさりと動いてしまいました。インボイス制度向けの消費税の処理まで含んだ、本格的な会計ソフトです。
+会計ソフトを作ると思いついた理由は複数あります。
+MulmoClaude上で本格的なアプリが作れることを確認したかった
+会計ソフトは以前から作りたいと考えていた
+SaaS系アプリがAI時代に持つべきアーキテクチャを確認したかった
+Claude Codeで複雑なソフトを作るプロセスをしっ</description>
+      <pubDate>Tue, 12 May 2026 07:10:00 +0900</pubDate>
+      <guid>1864932153037915244</guid>
+      <itunes:duration>4386</itunes:duration>
+      <enclosure url="https://github.com/easyuji/LearningProcessing/releases/download/podcast-mp3s/20260523_.life-is-beautiful-.ai.mp3" type="audio/mpeg" length="26313264" />
+    </item>
+    <item>
+      <title>週刊金融日記 第730号 アメリカン資本主義（欧州も）の行き着いた先を見せてくれた『プラダを着た悪魔２』といよいよ西側の敗北という話、アメリカAI全賭けでメモリー＆CPU企業の大暴騰続く、上環のビストロに行ったら牛フィレ肉のロッシーニ風がめちゃ美味かった、香港・マカオ・深センの歩き方と台湾旅行について、他【夜間飛行】</title>
+      <description>// 週刊金融日記
+// 2026年5月12日 第730号
+// アメリカン資本主義（欧州も）の行き着いた先を見せてくれた『プラダを着た悪魔
+２』といよいよ西側の敗北という話
+// アメリカAI全賭けでメモリー＆CPU企業の大暴騰続く
+// 上環のビストロに行ったら牛フィレ肉のロッシーニ風がめちゃ美味かった
+// 香港・マカオ・深センの歩き方と台湾旅行について
+// 他
+■web版
+こんにちは。藤沢数希です。
+最近、いろいろ税務申告とか事務仕事が溜まってバタバタしております。世の中、AIエ
+ージェントの時代とか騒々しいですが、いつになったらAIエージェントがこういうことや
+ってくれるようになる</description>
+      <pubDate>Tue, 12 May 2026 08:31:20 +0900</pubDate>
+      <guid>1864936750659879938</guid>
+      <itunes:duration>4779</itunes:duration>
+      <enclosure url="https://github.com/easyuji/LearningProcessing/releases/download/podcast-mp3s/20260523_.-.730.-.mp3" type="audio/mpeg" length="26582256" />
+    </item>
+    <item>
+      <title>週刊Life is beautiful ２０２６年５月１９日号：スペイン旅行、AI-Nativeビジネスアプリ・アーキテクチャ</title>
+      <description>今週のざっくばらん
+スペイン旅行
+今週は、スペインに旅行中なので、旅先からの配信です。2011年9月からスタートしたこのメルマガは、一度も休んだことがないのが自慢ですが、 今回は、クルーズ船からなので、ネットへのアクセスが心配でしたが、今のところ順調です。
+今回の旅行は、
+Kalos Golf
+というツアー会社が提供する、ゴルフと観光の両方が楽しめる10泊11日のツアーで、最初の3泊がスペインのマラガという街の近くホテルで、残りの7泊がクルーズ船で海岸沿いをフランスのニースまでゴルフをしながら移動するというスタイルのツアーです。
+特徴的なのは、「Sea Cloud Spirit」と呼ばれるクル</description>
+      <pubDate>Tue, 19 May 2026 07:10:00 +0900</pubDate>
+      <guid>1865566260217146896</guid>
+      <itunes:duration>4191</itunes:duration>
+      <enclosure url="https://github.com/easyuji/LearningProcessing/releases/download/podcast-mp3s/20260523_.life-is-beautiful-.ai-native.mp3" type="audio/mpeg" length="21185568" />
+    </item>
+    <item>
+      <title>週刊金融日記 第731号 トランプ大統領vs習近平主席の米中首脳会談が終わったので中国株への長期ビューをアップデートします、世界メモリバブルでキオクシア爆騰、フカヒレはなぜ香港ではなくマカオで安くて美味しいのか調べたら驚愕した、ST理論の有効範囲について、他【夜間飛行】</title>
+      <description>// 週刊金融日記
+// 2026年5月19日 第731号
+// トランプ大統領vs習近平主席の米中首脳会談が終わったので中国株への長期ビューを
+アップデートします
+// 世界メモリバブルでキオクシア爆騰
+// フカヒレはなぜ香港ではなくマカオで安くて美味しいのか調べたら驚愕した
+// ST理論の有効範囲について
+// 他
+■web版
+こんにちは。藤沢数希です。
+週末にまた深センに行ってきました。また、いろいろ学びがあったので、いずれ書き
+たいと思います。
+★うちの近くからちょうど深セン湾ボーダー行きのバスが出ているのですが、深センに入
+ったあとのDiDi乗り場がなかなかすごいですね。DiDi</description>
+      <pubDate>Tue, 19 May 2026 09:31:19 +0900</pubDate>
+      <guid>1865574703533311527</guid>
+      <itunes:duration>4779</itunes:duration>
+      <enclosure url="https://github.com/easyuji/LearningProcessing/releases/download/podcast-mp3s/20260523_.-.731.-.vs.mp3" type="audio/mpeg" length="22283136" />
+    </item>
+    <item>
+      <title>週刊Life is beautiful ２０２６年５月５日号：AI需要の爆発の兆候、Claude Max 20x の電力消費を発電容量から逆算する、大きく変わりつつあるソフトウェア・ビジネス</title>
+      <description>今週のざっくばらん
+AI需要の爆発の兆候
+OpenAIが優れた画像生成AI(gpt-image-1)をリリースしたあたり（2025年3月ごろ）から感じていたのですが、AI需要はすでに大きく伸び始めており、ここからさらに爆発的に伸びることを確信しています。
+私自身が良い例で、ここ2ヶ月ほどの、Claude Codeのトークン消費量（AIをどのくらい使ったかを表す数字）が爆発的に伸びています。それまでは、月額20ドルのProプランで十分でしたが、2ヶ月前から、その20倍の容量のMax 20xプランに切り替えましたが、それを毎週、ほぼ使い切っています（このプランがどのくらい電力を消費するかの概算も下</description>
+      <pubDate>Tue, 05 May 2026 07:10:00 +0900</pubDate>
+      <guid>1864298130732083185</guid>
+      <itunes:duration>6237</itunes:duration>
+      <enclosure url="https://github.com/easyuji/LearningProcessing/releases/download/podcast-mp3s/20260523_.life-is-beautiful-.ai.claude-max.mp3" type="audio/mpeg" length="37420704" />
+    </item>
+  </channel>
+</rss>

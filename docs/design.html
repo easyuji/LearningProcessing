@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gmail Newsletter TTS — システム設計書</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Helvetica Neue", sans-serif; background: #f0f2f5; color: #1a1a2e; line-height: 1.6; }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.15rem; margin-bottom: 12px; }
+  h3 { font-size: 0.95rem; margin-bottom: 6px; color: #444; }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+
+  /* Header */
+  .header { background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; border-radius: 16px; padding: 28px 32px; margin-bottom: 24px; }
+  .header p { color: #a0aec0; margin-top: 6px; font-size: 0.9rem; }
+  .badge { display: inline-block; background: #48bb78; color: white; font-size: 0.72rem; padding: 2px 10px; border-radius: 20px; margin-left: 10px; vertical-align: middle; }
+
+  /* Cards */
+  .card { background: white; border-radius: 14px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .card-title { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #f0f2f5; }
+  .icon { font-size: 1.4rem; }
+
+  /* Flow diagram */
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 16px 0; }
+  .flow-box { background: #eef2ff; border: 2px solid #c7d2fe; border-radius: 10px; padding: 10px 14px; font-size: 0.82rem; text-align: center; min-width: 90px; }
+  .flow-box.source { background: #fef3c7; border-color: #fcd34d; }
+  .flow-box.process { background: #d1fae5; border-color: #6ee7b7; }
+  .flow-box.store { background: #ede9fe; border-color: #c4b5fd; }
+  .flow-box.output { background: #fee2e2; border-color: #fca5a5; }
+  .flow-box strong { display: block; font-size: 0.75rem; color: #666; margin-bottom: 2px; }
+  .arrow { color: #9ca3af; font-size: 1.2rem; }
+
+  /* Files table */
+  .file-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .file-item { background: #f8fafc; border-radius: 8px; padding: 12px 14px; border-left: 3px solid #6366f1; }
+  .file-item .name { font-family: monospace; font-size: 0.85rem; font-weight: 600; color: #4338ca; }
+  .file-item .desc { font-size: 0.8rem; color: #555; margin-top: 4px; }
+
+  /* Secrets */
+  .secret-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .secret-item { background: #fef9f0; border: 1px solid #fcd34d; border-radius: 8px; padding: 12px; }
+  .secret-item .key { font-family: monospace; font-size: 0.82rem; font-weight: 600; color: #92400e; }
+  .secret-item .loc { font-size: 0.75rem; color: #666; margin-top: 3px; }
+
+  /* Cost table */
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th { background: #f8fafc; padding: 10px 14px; text-align: left; font-size: 0.8rem; color: #666; border-bottom: 2px solid #e5e7eb; }
+  td { padding: 10px 14px; border-bottom: 1px solid #f0f2f5; }
+  tr:last-child td { border-bottom: none; }
+  .cost-free { color: #059669; font-weight: 600; }
+  .cost-paid { color: #dc2626; }
+  .cost-opt { color: #d97706; }
+
+  /* Risk */
+  .risk-list { display: flex; flex-direction: column; gap: 10px; }
+  .risk-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: 10px; }
+  .risk-item.high { background: #fff1f2; border-left: 4px solid #f87171; }
+  .risk-item.mid  { background: #fffbeb; border-left: 4px solid #fbbf24; }
+  .risk-item.low  { background: #f0fdf4; border-left: 4px solid #4ade80; }
+  .risk-label { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px; }
+  .risk-item.high .risk-label { background: #fecdd3; color: #be123c; }
+  .risk-item.mid  .risk-label { background: #fde68a; color: #92400e; }
+  .risk-item.low  .risk-label { background: #bbf7d0; color: #166534; }
+  .risk-body .title { font-size: 0.88rem; font-weight: 600; }
+  .risk-body .detail { font-size: 0.8rem; color: #555; margin-top: 3px; }
+  .risk-body .mitigation { font-size: 0.78rem; color: #047857; margin-top: 4px; }
+  .risk-body .mitigation::before { content: "→ 対策: "; font-weight: 600; }
+
+  /* Schedule */
+  .schedule { display: flex; align-items: center; gap: 8px; background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 12px 16px; font-size: 0.88rem; }
+
+  /* Two columns */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* Requirement pills */
+  .req-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .req-item { background: #f8fafc; border-radius: 10px; padding: 14px; text-align: center; border-top: 3px solid #6366f1; }
+  .req-item .req-icon { font-size: 1.6rem; }
+  .req-item .req-title { font-size: 0.82rem; font-weight: 600; margin-top: 6px; }
+  .req-item .req-desc { font-size: 0.75rem; color: #666; margin-top: 4px; }
+
+  @media (max-width: 600px) {
+    .file-grid, .secret-grid, .cols, .req-grid { grid-template-columns: 1fr; }
+    .flow { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>📨 Gmail Newsletter TTS <span class="badge">稼働中</span></h1>
+    <p>Gmailのメルマガを自動で音声化し、iPhoneのPodcastアプリで聴くシステム</p>
+    <p style="margin-top:8px; font-size:0.8rem; color:#718096;">最終更新: 2026-05-25 ／ 設計書 v1.0</p>
+  </div>
+
+  <!-- 要件 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📋</span><h2>要件</h2></div>
+    <div class="req-grid">
+      <div class="req-item">
+        <div class="req-icon">📬</div>
+        <div class="req-title">自動取得</div>
+        <div class="req-desc">Gmailの「newsletter」ラベルのメールを毎朝自動取得</div>
+      </div>
+      <div class="req-item">
+        <div class="req-icon">🔊</div>
+        <div class="req-title">音声変換</div>
+        <div class="req-desc">テキストをMP3に変換（Edge TTS、将来的にOpenAI TTS）</div>
+      </div>
+      <div class="req-item">
+        <div class="req-icon">🎙</div>
+        <div class="req-title">Podcast配信</div>
+        <div class="req-desc">iPhoneのPodcastアプリでそのまま聴ける</div>
+      </div>
+      <div class="req-item">
+        <div class="req-icon">🔒</div>
+        <div class="req-title">秘密情報管理</div>
+        <div class="req-desc">APIキー等はmacOSキーチェーンに保存。コード内に書かない</div>
+      </div>
+      <div class="req-item">
+        <div class="req-icon">⏰</div>
+        <div class="req-title">自動スケジュール</div>
+        <div class="req-desc">毎朝7:00にlaunchdで自動実行（Mac起動中）</div>
+      </div>
+      <div class="req-item">
+        <div class="req-icon">🧹</div>
+        <div class="req-title">自動クリーンアップ</div>
+        <div class="req-desc">90日超の音声ファイルを自動削除してストレージ節約</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- アーキテクチャ -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🏗</span><h2>アーキテクチャ（データの流れ）</h2></div>
+    <div class="flow">
+      <div class="flow-box source"><strong>入力</strong>Gmail<br>IMAP</div>
+      <div class="arrow">→</div>
+      <div class="flow-box process"><strong>抽出</strong>テキスト<br>抽出</div>
+      <div class="arrow">→</div>
+      <div class="flow-box process"><strong>変換</strong>TTS<br>音声生成</div>
+      <div class="arrow">→</div>
+      <div class="flow-box store"><strong>保存</strong>docs/<br>audio/</div>
+      <div class="arrow">→</div>
+      <div class="flow-box store"><strong>配信</strong>GitHub<br>Pages</div>
+      <div class="arrow">→</div>
+      <div class="flow-box store"><strong>フィード</strong>RSS<br>feed.xml</div>
+      <div class="arrow">→</div>
+      <div class="flow-box output"><strong>出力</strong>iPhone<br>Podcast</div>
+    </div>
+
+    <div class="cols" style="margin-top:16px;">
+      <div>
+        <h3>📍 実行環境</h3>
+        <div style="font-size:0.85rem; margin-top:8px;">
+          <div style="background:#f8fafc; padding:10px; border-radius:8px;">
+            <div>💻 <strong>Mac</strong> — メイン処理（Python 3.9）</div>
+            <div style="margin-top:6px;">☁️ <strong>GitHub Pages</strong> — MP3ホスティング・RSS配信</div>
+            <div style="margin-top:6px;">🔊 <strong>Microsoft Edge TTS</strong> — 音声合成（クラウド、無料）</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3>⏰ 実行スケジュール</h3>
+        <div style="margin-top:8px;" class="schedule">
+          🕖 <div><strong>毎朝 7:00</strong> 自動実行<br><span style="color:#555; font-size:0.8rem;">launchd（macOS）で管理<br>~/Library/LaunchAgents/</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- プログラム実装 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">💻</span><h2>プログラム実装（ファイル構成）</h2></div>
+    <div style="font-size:0.8rem; color:#666; margin-bottom:12px;">📁 /Users/yujimorimoto/LearningProcessing/gmail_newsletter_tts/</div>
+    <div class="file-grid">
+      <div class="file-item">
+        <div class="name">main.py</div>
+        <div class="desc">🚀 メインパイプライン。全モジュールを順番に呼び出す</div>
+      </div>
+      <div class="file-item">
+        <div class="name">config.py</div>
+        <div class="desc">⚙️ 設定値の読み込み。キーチェーンから秘密情報を取得</div>
+      </div>
+      <div class="file-item">
+        <div class="name">gmail_client.py</div>
+        <div class="desc">📬 Gmail IMAP接続。未処理メールの取得・処理済みラベル付け</div>
+      </div>
+      <div class="file-item">
+        <div class="name">text_extractor.py</div>
+        <div class="desc">📝 HTML/テキストメールからプレーンテキストを抽出</div>
+      </div>
+      <div class="file-item">
+        <div class="name">tts_client.py</div>
+        <div class="desc">🔊 テキスト→MP3変換。OpenAI TTS優先、なければEdge TTS</div>
+      </div>
+      <div class="file-item">
+        <div class="name">github_client.py</div>
+        <div class="desc">📂 MP3をdocs/audio/に保存してGitHub Pages URLを返す</div>
+      </div>
+      <div class="file-item">
+        <div class="name">podcast_feed.py</div>
+        <div class="desc">📡 RSS feed.xml生成・git commit・GitHub Pagesにpush</div>
+      </div>
+      <div class="file-item">
+        <div class="name">script_converter.py</div>
+        <div class="desc">🤖 Claude APIで読み上げ用に文章を自然な口語に変換（任意）</div>
+      </div>
+      <div class="file-item">
+        <div class="name">cleanup.py</div>
+        <div class="desc">🧹 90日超のMP3を自動削除してストレージを節約</div>
+      </div>
+      <div class="file-item">
+        <div class="name">notifier.py</div>
+        <div class="desc">📧 処理完了後に自分へ通知メールを送信</div>
+      </div>
+      <div class="file-item">
+        <div class="name">recover_feed.py</div>
+        <div class="desc">🔧 緊急時用。フィードが壊れたとき全エピソードを再構築</div>
+      </div>
+      <div class="file-item">
+        <div class="name">run.sh / setup_launchd.sh</div>
+        <div class="desc">🖥 launchd用ラッパー・初期設定スクリプト</div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <h3>🔑 秘密情報の管理（macOSキーチェーン）</h3>
+      <div class="secret-grid" style="margin-top:10px;">
+        <div class="secret-item">
+          <div class="key">GMAIL_APP_PASSWORD</div>
+          <div class="loc">Gmailアプリパスワード（IMAP認証用）</div>
+        </div>
+        <div class="secret-item">
+          <div class="key">GITHUB_TOKEN</div>
+          <div class="loc">GitHub PAT（git push権限）</div>
+        </div>
+        <div class="secret-item">
+          <div class="key">OPENAI_API_KEY</div>
+          <div class="loc">OpenAI TTS用（未登録 → Edge TTSを使用）</div>
+        </div>
+        <div class="secret-item">
+          <div class="key">ANTHROPIC_API_KEY</div>
+          <div class="loc">Claude API（スクリプト変換用・任意）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- コスト -->
+  <div class="card">
+    <div class="card-title"><span class="icon">💰</span><h2>コスト</h2></div>
+    <table>
+      <thead>
+        <tr><th>サービス</th><th>用途</th><th>現在の使用</th><th>料金</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Edge TTS</strong></td>
+          <td>音声合成（メルマガ）</td>
+          <td>✅ 使用中</td>
+          <td class="cost-free">無料</td>
+        </tr>
+        <tr>
+          <td><strong>GitHub Pages</strong></td>
+          <td>MP3ホスティング・RSS配信</td>
+          <td>✅ 使用中</td>
+          <td class="cost-free">無料</td>
+        </tr>
+        <tr>
+          <td><strong>Gmail IMAP</strong></td>
+          <td>メール取得</td>
+          <td>✅ 使用中</td>
+          <td class="cost-free">無料</td>
+        </tr>
+        <tr>
+          <td><strong>OpenAI TTS</strong></td>
+          <td>高品質音声合成（任意）</td>
+          <td>⬜ 未登録</td>
+          <td class="cost-opt">$0.030/1,000文字<br><span style="font-size:0.75rem;">メルマガ1通≈¥65、本1冊≈¥450〜880</span></td>
+        </tr>
+        <tr>
+          <td><strong>Claude API</strong></td>
+          <td>口語変換（任意）</td>
+          <td>⬜ 未登録</td>
+          <td class="cost-opt">従量課金（任意機能）</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px; background:#f0fdf4; border-radius:8px; padding:12px; font-size:0.85rem;">
+      ✅ <strong>現状のコスト: 完全無料</strong>（Edge TTS + GitHub Pages）
+    </div>
+  </div>
+
+  <!-- リスク -->
+  <div class="card">
+    <div class="card-title"><span class="icon">⚠️</span><h2>リスクと対策</h2></div>
+    <div class="risk-list">
+
+      <div class="risk-item high">
+        <div><div class="risk-label">高</div></div>
+        <div class="risk-body">
+          <div class="title">GitHubトークンがgit logに残る</div>
+          <div class="detail">push時にトークン入りURLが remote tracking に記録される場合がある</div>
+          <div class="mitigation">push後に <code>git remote set-url origin https://github.com/...</code> でURLをリセット（現状未実装）</div>
+        </div>
+      </div>
+
+      <div class="risk-item high">
+        <div><div class="risk-label">高</div></div>
+        <div class="risk-body">
+          <div class="title">Edge TTSが突然使えなくなる</div>
+          <div class="detail">Microsoftの仕様変更で403エラーが発生。過去に実際に発生済み</div>
+          <div class="mitigation">edge-ttsのバージョンを最新に保つ（requirements.txt: edge-tts>=7.2.8）。OpenAI TTSに切り替えも可能</div>
+        </div>
+      </div>
+
+      <div class="risk-item mid">
+        <div><div class="risk-label">中</div></div>
+        <div class="risk-body">
+          <div class="title">docs/audioが大きくなりすぎる</div>
+          <div class="detail">GitHubリポジトリは1ファイル100MB、リポジトリ全体1GBが推奨上限。MP3は1本20〜37MB</div>
+          <div class="mitigation">cleanup.pyが90日超のファイルを自動削除。現在6本≈150MBで問題なし</div>
+        </div>
+      </div>
+
+      <div class="risk-item mid">
+        <div><div class="risk-label">中</div></div>
+        <div class="risk-body">
+          <div class="title">Macがスリープ中は実行されない</div>
+          <div class="detail">launchdはMac起動中のみ動作。スリープ時は7時にならない</div>
+          <div class="mitigation">手動で <code>python3 main.py</code> を実行するか、起動後に自動実行（RunAtLoad=true）に変更可能</div>
+        </div>
+      </div>
+
+      <div class="risk-item mid">
+        <div><div class="risk-label">中</div></div>
+        <div class="risk-body">
+          <div class="title">GmailアプリパスワードはGoogleアカウント全体にアクセス可能</div>
+          <div class="detail">アプリパスワードはIMAPだけでなく他のGoogleサービスにも使える強い権限</div>
+          <div class="mitigation">キーチェーンに保存、.envや会話中には流さない（実施済み）。不審な場合はGoogleアカウントで無効化可能</div>
+        </div>
+      </div>
+
+      <div class="risk-item low">
+        <div><div class="risk-label">低</div></div>
+        <div class="risk-body">
+          <div class="title">RSSフィードが壊れる</div>
+          <div class="detail">バグで既存エピソードが消えることがあった（今回修正済み）</div>
+          <div class="mitigation">recover_feed.pyで全エピソードを再構築できる（実際に使用）</div>
+        </div>
+      </div>
+
+      <div class="risk-item low">
+        <div><div class="risk-label">低</div></div>
+        <div class="risk-body">
+          <div class="title">GitHub Pagesの反映遅延</div>
+          <div class="detail">git push後、実際にURLで聴けるまで数分かかることがある</div>
+          <div class="mitigation">待てばOK。通常2〜5分以内に反映</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- フッター -->
+  <div style="text-align:center; font-size:0.75rem; color:#999; padding:16px 0;">
+    Generated by Claude · gmail_newsletter_tts v1.0 · 2026-05-25
+  </div>
+
+</div>
+</body>
+</html>

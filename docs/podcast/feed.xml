@@ -7,7 +7,8 @@
     <link>https://easyuji.github.io/LearningProcessing</link>
     <itunes:author>Yuji</itunes:author>
     <itunes:explicit>no</itunes:explicit>
-    <itunes:image href="https://easyuji.github.io/LearningProcessing/podcast/cover.jpg" />
+    <itunes:category text="Technology" />
+    <itunes:image href="https://raw.githubusercontent.com/easyuji/LearningProcessing/master/docs/podcast/images/ep_20260526.jpg" />
     <item>
       <title>週刊Life is beautiful ２０２６年５月２６日号：オムレツの焼き方と文化、DSLを使ったAIネイティブなエンタープライズ・アプリ、SpaceXのIPO</title>
       <description>今週のざっくばらん

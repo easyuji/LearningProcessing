@@ -105,8 +105,17 @@ class PodcastFeed:
         ch(_itunes("author"), config.PODCAST_AUTHOR)
         ch(_itunes("explicit"), "no")
 
+        # カテゴリ（Apple Podcasts 登録に必須）
+        cat = ET.SubElement(channel, _itunes("category"))
+        cat.set("text", "Technology")
+
+        # チャンネルカバー画像：最新エピソードの画像を流用（なければデフォルト）
+        cover_url = next(
+            (ep["image_url"] for ep in reversed(self._episodes) if ep.get("image_url")),
+            f"{config.PODCAST_BASE_URL}/podcast/cover.jpg"
+        )
         img = ET.SubElement(channel, _itunes("image"))
-        img.set("href", f"{config.PODCAST_BASE_URL}/podcast/cover.jpg")
+        img.set("href", cover_url)
 
         for ep in reversed(self._episodes):
             if not ep.get("mp3_url"):

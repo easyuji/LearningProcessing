@@ -34,7 +34,6 @@ def _prepare_episode_image(raw_url: str, slug: str) -> str:
     try:
         from PIL import Image
         import io
-        import tempfile
         filename = f"ep_{slug}.jpg"
 
         req = urllib.request.Request(raw_url, headers={"User-Agent": "Mozilla/5.0"})

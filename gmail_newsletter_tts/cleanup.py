@@ -93,7 +93,16 @@ def cleanup_old_audio(keep_days: int = 90) -> list[str]:
              f"chore: {keep_days}日超の音声ファイルを削除（{len(old_files)}件）\n\n{filelist}"],
             cwd=repo_root, check=True,
         )
-        subprocess.run(["git", "push", "-u", "origin", "HEAD"], cwd=repo_root, check=True)
+        token = subprocess.run(
+            ["security", "find-generic-password", "-a", "GITHUB_TOKEN",
+             "-s", "gmail_newsletter_tts", "-w"],
+            capture_output=True, text=True, check=True
+        ).stdout.strip()
+        remote_url = f"https://{token}@github.com/{config.GITHUB_REPO}.git"
+        subprocess.run(
+            ["git", "push", "-u", remote_url, "HEAD:master"],
+            cwd=repo_root, check=True
+        )
         print(f"削除・push完了（{len(old_files)}件）。")
 
     return [f.name for f in old_files]

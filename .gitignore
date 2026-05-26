@@ -5,5 +5,5 @@ gmail_newsletter_tts/credentials.json
 gmail_newsletter_tts/token.json
 gmail_newsletter_tts/.env
 
-# Podcast MP3s (stored in GitHub Releases)
-docs/audio/*.mp3
+# Podcast MP3s (served via raw.githubusercontent.com)
+# docs/audio/*.mp3  ← git管理に戻した（raw.githubusercontent.com経由でaudio/mpegで配信）

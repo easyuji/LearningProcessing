@@ -22,20 +22,19 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 _IMAGES_DIR = _REPO_ROOT / "docs" / "podcast" / "images"
 
 
-def _prepare_episode_image(raw_url: str, slug: str) -> str:
+def _prepare_episode_image(raw_url: str, slug: str, github: "GitHubClient") -> str:
     """
-    メールから取得した画像URLを正方形 JPEG に変換して GitHub Pages 用パスに保存。
+    メールから取得した画像URLを正方形 JPEG に変換して GitHub Releases にアップロード。
     Apple Podcasts 要件: 正方形・JPEG/PNG・1400〜3000px。
-    変換後の GitHub Pages URL を返す。失敗時は空文字。
+    アップロード後の Releases ダウンロード URL を返す。失敗時は空文字。
     """
     if not raw_url:
         return ""
     try:
         from PIL import Image
         import io
-        _IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+        import tempfile
         filename = f"ep_{slug}.jpg"
-        out_path = _IMAGES_DIR / filename
 
         req = urllib.request.Request(raw_url, headers={"User-Agent": "Mozilla/5.0"})
         with urllib.request.urlopen(req, timeout=15) as resp:
@@ -48,10 +47,15 @@ def _prepare_episode_image(raw_url: str, slug: str) -> str:
                          (w + side) // 2, (h + side) // 2))
         size = min(max(side, 1400), 3000)
         img = img.resize((size, size), Image.LANCZOS)
-        img.save(out_path, "JPEG", quality=90, optimize=True)
 
-        owner, repo = config.GITHUB_REPO.split("/")
-        return f"https://{owner}.github.io/{repo}/podcast/images/{filename}"
+        with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
+            img.save(tmp, "JPEG", quality=90, optimize=True)
+            tmp_path = tmp.name
+
+        # GitHub Releases にアップロード
+        image_url, _ = github.upload_image(tmp_path, filename)
+        os.unlink(tmp_path)
+        return image_url
     except Exception as e:
         print(f"  画像変換スキップ: {e}")
         return ""
@@ -140,8 +144,8 @@ def main():
         slug = _slugify(subject)
         filename = f"{date_prefix}_{slug}.mp3"
 
-        # 画像を正方形 JPEG に変換（Apple Podcasts 要件対応）
-        image_url = _prepare_episode_image(email.get("image_url", ""), f"{date_prefix}_{slug[:30]}")
+        # 画像を正方形 JPEG に変換して GitHub Releases にアップロード（Apple Podcasts 要件対応）
+        image_url = _prepare_episode_image(email.get("image_url", ""), f"{date_prefix}_{slug[:30]}", github)
         if image_url:
             print(f"  エピソード画像: {image_url}")
 

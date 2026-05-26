@@ -97,10 +97,14 @@ class GitHubClient:
                 urllib.request.urlopen(del_req).close()
                 break
 
-    def upload_mp3(self, file_path: str, filename: str) -> tuple[str, int]:
+    def upload_image(self, file_path: str, filename: str) -> tuple[str, int]:
         """
-        MP3 を GitHub Releases にアップロードし、(ダウンロード URL, ファイルサイズ) を返す。
+        JPEG/PNG 画像を GitHub Releases にアップロードし、(ダウンロード URL, ファイルサイズ) を返す。
         """
+        return self._upload_asset(file_path, filename, "image/jpeg")
+
+    def _upload_asset(self, file_path: str, filename: str, content_type: str) -> tuple[str, int]:
+        """アセットを GitHub Releases にアップロードする共通処理。"""
         release_id = self._get_or_create_release()
         self._delete_existing_asset(release_id, filename)
 
@@ -118,16 +122,20 @@ class GitHubClient:
             headers={
                 "Authorization": f"Bearer {self._token}",
                 "Accept": "application/vnd.github+json",
-                "Content-Type": "audio/mpeg",
+                "Content-Type": content_type,
                 "Content-Length": str(size),
             },
             method="POST",
         )
         with urllib.request.urlopen(req) as resp:
-            result = json.loads(resp.read())
+            json.loads(resp.read())
 
         download_url = (
             f"https://github.com/{self._owner}/{self._repo}"
             f"/releases/download/{self._tag}/{filename}"
         )
         return download_url, size
+
+    def upload_mp3(self, file_path: str, filename: str) -> tuple[str, int]:
+        """MP3 を GitHub Releases にアップロードし、(ダウンロード URL, ファイルサイズ) を返す。"""
+        return self._upload_asset(file_path, filename, "audio/mpeg")

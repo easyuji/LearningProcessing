@@ -35,6 +35,7 @@ Claude Codeで月収100万を達成した〜とか、そういう金儲け的な
       <guid>1866051632761674094</guid>
       <itunes:duration>2969</itunes:duration>
       <enclosure url="https://easyuji.github.io/LearningProcessing/audio/20260525_.ai.21.-.mp3" type="audio/mpeg" length="17811648" />
+      <itunes:image href="https://raw.githubusercontent.com/easyuji/LearningProcessing/master/docs/podcast/images/ep_202605_674094.jpg" />
     </item>
     <item>
       <title>週刊Life is beautiful ２０２６年５月１２日号：会計ソフトを２〜３日で作った話、AIが米国の労働者から吸い上げた$211billion（約32兆円）</title>
@@ -50,6 +51,7 @@ Claude Codeで複雑なソフトを作るプロセスをしっ</description>
       <guid>1864932153037915244</guid>
       <itunes:duration>4386</itunes:duration>
       <enclosure url="https://easyuji.github.io/LearningProcessing/audio/20260523_.life-is-beautiful-.ai.mp3" type="audio/mpeg" length="26313264" />
+      <itunes:image href="https://raw.githubusercontent.com/easyuji/LearningProcessing/master/docs/podcast/images/ep_202605_915244.jpg" />
     </item>
     <item>
       <title>週刊金融日記 第730号 アメリカン資本主義（欧州も）の行き着いた先を見せてくれた『プラダを着た悪魔２』といよいよ西側の敗北という話、アメリカAI全賭けでメモリー＆CPU企業の大暴騰続く、上環のビストロに行ったら牛フィレ肉のロッシーニ風がめちゃ美味かった、香港・マカオ・深センの歩き方と台湾旅行について、他【夜間飛行】</title>
@@ -70,6 +72,7 @@ Claude Codeで複雑なソフトを作るプロセスをしっ</description>
       <guid>1864936750659879938</guid>
       <itunes:duration>4779</itunes:duration>
       <enclosure url="https://easyuji.github.io/LearningProcessing/audio/20260523_.-.730.-.mp3" type="audio/mpeg" length="26582256" />
+      <itunes:image href="https://raw.githubusercontent.com/easyuji/LearningProcessing/master/docs/podcast/images/ep_kinyu_nikki.jpg" />
     </item>
     <item>
       <title>週刊Life is beautiful ２０２６年５月１９日号：スペイン旅行、AI-Nativeビジネスアプリ・アーキテクチャ</title>
@@ -84,6 +87,7 @@ Kalos Golf
       <guid>1865566260217146896</guid>
       <itunes:duration>4191</itunes:duration>
       <enclosure url="https://easyuji.github.io/LearningProcessing/audio/20260523_.life-is-beautiful-.ai-native.mp3" type="audio/mpeg" length="21185568" />
+      <itunes:image href="https://raw.githubusercontent.com/easyuji/LearningProcessing/master/docs/podcast/images/ep_202605_146896.jpg" />
     </item>
     <item>
       <title>週刊金融日記 第731号 トランプ大統領vs習近平主席の米中首脳会談が終わったので中国株への長期ビューをアップデートします、世界メモリバブルでキオクシア爆騰、フカヒレはなぜ香港ではなくマカオで安くて美味しいのか調べたら驚愕した、ST理論の有効範囲について、他【夜間飛行】</title>
@@ -105,6 +109,7 @@ Kalos Golf
       <guid>1865574703533311527</guid>
       <itunes:duration>4779</itunes:duration>
       <enclosure url="https://easyuji.github.io/LearningProcessing/audio/20260523_.-.731.-.vs.mp3" type="audio/mpeg" length="22283136" />
+      <itunes:image href="https://raw.githubusercontent.com/easyuji/LearningProcessing/master/docs/podcast/images/ep_kinyu_nikki.jpg" />
     </item>
     <item>
       <title>週刊Life is beautiful ２０２６年５月５日号：AI需要の爆発の兆候、Claude Max 20x の電力消費を発電容量から逆算する、大きく変わりつつあるソフトウェア・ビジネス</title>
@@ -116,6 +121,7 @@ OpenAIが優れた画像生成AI(gpt-image-1)をリリースしたあたり（20
       <guid>1864298130732083185</guid>
       <itunes:duration>6237</itunes:duration>
       <enclosure url="https://easyuji.github.io/LearningProcessing/audio/20260523_.life-is-beautiful-.ai.claude-max.mp3" type="audio/mpeg" length="37420704" />
+      <itunes:image href="https://raw.githubusercontent.com/easyuji/LearningProcessing/master/docs/podcast/images/ep_202605_083185.jpg" />
     </item>
   </channel>
 </rss>

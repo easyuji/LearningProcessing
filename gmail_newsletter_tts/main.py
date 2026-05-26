@@ -22,11 +22,12 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 _IMAGES_DIR = _REPO_ROOT / "docs" / "podcast" / "images"
 
 
-def _prepare_episode_image(raw_url: str, slug: str, github: "GitHubClient") -> str:
+def _prepare_episode_image(raw_url: str, slug: str) -> str:
     """
-    メールから取得した画像URLを正方形 JPEG に変換して GitHub Releases にアップロード。
+    メールから取得した画像URLを正方形 JPEG に変換して docs/podcast/images/ に保存。
     Apple Podcasts 要件: 正方形・JPEG/PNG・1400〜3000px。
-    アップロード後の Releases ダウンロード URL を返す。失敗時は空文字。
+    raw.githubusercontent.com 経由の URL を返す（image/jpeg, Pages ビルド不要）。
+    失敗時は空文字。
     """
     if not raw_url:
         return ""
@@ -48,14 +49,13 @@ def _prepare_episode_image(raw_url: str, slug: str, github: "GitHubClient") -> s
         size = min(max(side, 1400), 3000)
         img = img.resize((size, size), Image.LANCZOS)
 
-        with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
-            img.save(tmp, "JPEG", quality=90, optimize=True)
-            tmp_path = tmp.name
+        # docs/podcast/images/ にも保存（raw.githubusercontent.com URL 用）
+        _IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+        out_path = _IMAGES_DIR / filename
+        img.save(out_path, "JPEG", quality=90, optimize=True)
 
-        # GitHub Releases にアップロード
-        image_url, _ = github.upload_image(tmp_path, filename)
-        os.unlink(tmp_path)
-        return image_url
+        owner, repo = config.GITHUB_REPO.split("/")
+        return f"https://raw.githubusercontent.com/{owner}/{repo}/master/docs/podcast/images/{filename}"
     except Exception as e:
         print(f"  画像変換スキップ: {e}")
         return ""
@@ -144,8 +144,8 @@ def main():
         slug = _slugify(subject)
         filename = f"{date_prefix}_{slug}.mp3"
 
-        # 画像を正方形 JPEG に変換して GitHub Releases にアップロード（Apple Podcasts 要件対応）
-        image_url = _prepare_episode_image(email.get("image_url", ""), f"{date_prefix}_{slug[:30]}", github)
+        # 画像を正方形 JPEG に変換して docs/podcast/images/ に保存（raw.githubusercontent.com URL）
+        image_url = _prepare_episode_image(email.get("image_url", ""), f"{date_prefix}_{slug[:30]}")
         if image_url:
             print(f"  エピソード画像: {image_url}")
 

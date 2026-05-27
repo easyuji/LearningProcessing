@@ -25,9 +25,18 @@ def _itunes(tag: str) -> str:
 
 
 class PodcastFeed:
-    def __init__(self):
+    def __init__(self, route=None):
+        """
+        route: config.FEED_ROUTES の要素。None の場合はレガシー単一フィード設定を使用。
+        """
         repo_root = Path(__file__).resolve().parent.parent
-        self._feed_path = repo_root / config.PODCAST_FEED_PATH
+        self._route = route or {
+            "title": config.PODCAST_TITLE,
+            "description": config.PODCAST_DESCRIPTION,
+            "cover_url": f"{config.PODCAST_BASE_URL}/podcast/cover.jpg",
+            "feed_path": config.PODCAST_FEED_PATH,
+        }
+        self._feed_path = repo_root / self._route["feed_path"]
         self._feed_path.parent.mkdir(parents=True, exist_ok=True)
         self._episodes: list[dict] = []
         self._load_existing()
@@ -98,8 +107,8 @@ class PodcastFeed:
             el = ET.SubElement(channel, tag)
             el.text = text
 
-        ch("title", config.PODCAST_TITLE)
-        ch("description", config.PODCAST_DESCRIPTION)
+        ch("title", self._route["title"])
+        ch("description", self._route["description"])
         ch("language", "ja")
         ch("link", config.PODCAST_BASE_URL)
         ch(_itunes("author"), config.PODCAST_AUTHOR)
@@ -109,13 +118,9 @@ class PodcastFeed:
         cat = ET.SubElement(channel, _itunes("category"))
         cat.set("text", "Technology")
 
-        # チャンネルカバー画像：最新エピソードの画像を流用（なければデフォルト）
-        cover_url = next(
-            (ep["image_url"] for ep in reversed(self._episodes) if ep.get("image_url")),
-            f"{config.PODCAST_BASE_URL}/podcast/cover.jpg"
-        )
+        # チャンネルカバー画像
         img = ET.SubElement(channel, _itunes("image"))
-        img.set("href", cover_url)
+        img.set("href", self._route["cover_url"])
 
         for ep in reversed(self._episodes):
             if not ep.get("mp3_url"):
@@ -157,8 +162,10 @@ class PodcastFeed:
         audio_dir = repo_root / "docs" / "audio"
         images_dir = repo_root / "docs" / "podcast" / "images"
         images_dir.mkdir(parents=True, exist_ok=True)
+        # 全フィードファイルを git add（他ルートのフィードも存在すれば含める）
+        feed_files = list((repo_root / "docs" / "podcast").glob("feed*.xml"))
         subprocess.run(
-            ["git", "add", str(self._feed_path), str(audio_dir), str(images_dir)],
+            ["git", "add", *[str(f) for f in feed_files], str(audio_dir), str(images_dir)],
             cwd=repo_root, check=True
         )
         result = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=repo_root)

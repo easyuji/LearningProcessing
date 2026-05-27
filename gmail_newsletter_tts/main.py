@@ -92,7 +92,11 @@ def main():
     print("Initializing clients...")
     gmail = GmailClient()
     github = GitHubClient()
-    feed = PodcastFeed()
+
+    # ルートごとに PodcastFeed インスタンスを作成
+    feeds: dict[str, PodcastFeed] = {
+        route["name"]: PodcastFeed(route) for route in config.FEED_ROUTES
+    }
 
     print("Fetching unprocessed newsletters...")
     try:
@@ -111,7 +115,11 @@ def main():
 
     for email in emails:
         subject = email["subject"]
+        sender  = email.get("from", "")
+        route   = config.get_feed_route(sender)
+        feed    = feeds[route["name"]]
         print(f"\n--- {subject} ---")
+        print(f"  Feed: {route['title']}")
 
         if feed.has_episode(email["id"]):
             print("  Already in feed, skipping.")
@@ -186,9 +194,16 @@ def main():
         print(f"  Done: {mp3_url}")
 
     if feed_updated:
-        print("\nPushing updated podcast feed...")
-        feed.save_and_push()
-        print(f"Feed saved to {config.PODCAST_FEED_PATH} and pushed.")
+        print("\nPushing updated podcast feeds...")
+        # 更新されたフィードのみ push（最初の1つが git push も担う）
+        pushed = False
+        for feed_obj in feeds.values():
+            if pushed:
+                feed_obj._write_xml()  # XML だけ更新（push は1回）
+            else:
+                feed_obj.save_and_push()
+                pushed = True
+        print("Feeds saved and pushed.")
         print("\nSending notification email...")
         send_notification(completed_episodes)
     else:

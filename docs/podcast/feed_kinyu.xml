@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+  <channel>
+    <title>週刊金融日記 Podcast</title>
+    <description>藤沢数希の週刊金融日記を音声で聴く</description>
+    <language>ja</language>
+    <link>https://easyuji.github.io/LearningProcessing</link>
+    <itunes:author>Yuji</itunes:author>
+    <itunes:explicit>no</itunes:explicit>
+    <itunes:category text="Technology" />
+    <itunes:image href="https://raw.githubusercontent.com/easyuji/LearningProcessing/master/docs/podcast/images/ep_kinyu_nikki.jpg" />
+    <item>
+      <title>週刊金融日記 第731号 トランプ大統領vs習近平主席の米中首脳会談が終わったので中国株への長期ビューをアップデートします、世界メモリバブルでキオクシア爆騰、フカヒレはなぜ香港ではなくマカオで安くて美味しいのか調べたら驚愕した、ST理論の有効範囲について、他【夜間飛行】</title>
+      <description>// 週刊金融日記
+// 2026年5月19日 第731号
+// トランプ大統領vs習近平主席の米中首脳会談が終わったので中国株への長期ビューを
+アップデートします
+// 世界メモリバブルでキオクシア爆騰
+// フカヒレはなぜ香港ではなくマカオで安くて美味しいのか調べたら驚愕した
+// ST理論の有効範囲について
+// 他
+■web版
+こんにちは。藤沢数希です。
+週末にまた深センに行ってきました。また、いろいろ学びがあったので、いずれ書き
+たいと思います。
+★うちの近くからちょうど深セン湾ボーダー行きのバスが出ているのですが、深センに入
+ったあとのDiDi乗り場がなかなかすごいですね。DiDi</description>
+      <pubDate>Tue, 19 May 2026 09:31:19 +0900</pubDate>
+      <guid>1865574703533311527</guid>
+      <itunes:duration>4779</itunes:duration>
+      <itunes:image href="https://raw.githubusercontent.com/easyuji/LearningProcessing/master/docs/podcast/images/ep_kinyu_nikki.jpg" />
+      <enclosure url="https://easyuji.github.io/LearningProcessing/audio/20260523_.-.731.-.vs.mp3" type="audio/mpeg" length="22283136" />
+    </item>
+    <item>
+      <title>週刊金融日記 第730号 アメリカン資本主義（欧州も）の行き着いた先を見せてくれた『プラダを着た悪魔２』といよいよ西側の敗北という話、アメリカAI全賭けでメモリー＆CPU企業の大暴騰続く、上環のビストロに行ったら牛フィレ肉のロッシーニ風がめちゃ美味かった、香港・マカオ・深センの歩き方と台湾旅行について、他【夜間飛行】</title>
+      <description>// 週刊金融日記
+// 2026年5月12日 第730号
+// アメリカン資本主義（欧州も）の行き着いた先を見せてくれた『プラダを着た悪魔
+２』といよいよ西側の敗北という話
+// アメリカAI全賭けでメモリー＆CPU企業の大暴騰続く
+// 上環のビストロに行ったら牛フィレ肉のロッシーニ風がめちゃ美味かった
+// 香港・マカオ・深センの歩き方と台湾旅行について
+// 他
+■web版
+こんにちは。藤沢数希です。
+最近、いろいろ税務申告とか事務仕事が溜まってバタバタしております。世の中、AIエ
+ージェントの時代とか騒々しいですが、いつになったらAIエージェントがこういうことや
+ってくれるようになる</description>
+      <pubDate>Tue, 12 May 2026 08:31:20 +0900</pubDate>
+      <guid>1864936750659879938</guid>
+      <itunes:duration>4779</itunes:duration>
+      <itunes:image href="https://raw.githubusercontent.com/easyuji/LearningProcessing/master/docs/podcast/images/ep_kinyu_nikki.jpg" />
+      <enclosure url="https://easyuji.github.io/LearningProcessing/audio/20260523_.-.730.-.mp3" type="audio/mpeg" length="26582256" />
+    </item>
+  </channel>
+</rss>

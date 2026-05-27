@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+  <channel>
+    <title>ゆな先生のAIメルマガ Podcast</title>
+    <description>ゆな先生のnoteメルマガを音声で聴く</description>
+    <language>ja</language>
+    <link>https://easyuji.github.io/LearningProcessing</link>
+    <itunes:author>Yuji</itunes:author>
+    <itunes:explicit>no</itunes:explicit>
+    <itunes:category text="Technology" />
+    <itunes:image href="https://raw.githubusercontent.com/easyuji/LearningProcessing/master/docs/podcast/images/ep_202605_674094.jpg" />
+    <item>
+      <title>生成AIが21世紀の核兵器となる理由 〜見えない…</title>
+      <description>サイトで確認する
+生成AIが21世紀の核兵器となる理由 〜見えない核兵器、それがAI〜
+AIはただの便利なチャットボットではない
+最近、ゆな先生のXのタイムラインを眺めていると、Claude Codeのプログラミング能力が人間を遥かに超えたとか、ChatGPTの画像モデルがGeminiを超えてきて驚いたといった話題が沢山目につく。
+Claude Codeで月収100万を達成した〜とか、そういう金儲け的な記事とかLINE誘導なども多く見る。
+誰もが生成AIを、日々の業務を効率化してくれる魔法の杖か、ちょっとした暇つぶしの話し相手として消費している。
+確かに消費者としてAIの進化を楽しみ、活用する</description>
+      <pubDate>Sun, 24 May 2026 06:51:53 +0000</pubDate>
+      <guid>1866051632761674094</guid>
+      <itunes:duration>2969</itunes:duration>
+      <itunes:image href="https://raw.githubusercontent.com/easyuji/LearningProcessing/master/docs/podcast/images/ep_202605_674094.jpg" />
+      <enclosure url="https://easyuji.github.io/LearningProcessing/audio/20260525_.ai.21.-.mp3" type="audio/mpeg" length="17811648" />
+    </item>
+  </channel>
+</rss>

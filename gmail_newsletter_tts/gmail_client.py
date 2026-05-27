@@ -95,6 +95,7 @@ class GmailClient:
                 "id": msg_id,
                 "subject": subject,
                 "date": date,
+                "from": msg.get("From", ""),
                 "html": html_combined,
                 "text": "\n".join(text_parts),
                 "image_url": _extract_image_url(html_combined),
